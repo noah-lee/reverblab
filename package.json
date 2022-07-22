@@ -1,18 +1,29 @@
 {
   "name": "reverblab",
   "version": "0.1.0",
+  "description": "Reverberation time (RT60) measurement app.",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.11.45",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "helmet": "^5.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "sequelize": "^6.21.3",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
@@ -20,7 +31,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "compile": "tsc",
+    "server:dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server/index.js\"",
+    "seed": "ts-node server/db/seed.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +53,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^18.0.6",
+    "concurrently": "^7.3.0",
+    "nodemon": "^2.0.19"
   }
 }
