@@ -2,7 +2,7 @@ import { RequestHandler, ErrorRequestHandler } from 'express';
 import { BaseError } from 'sequelize';
 
 const notFound: RequestHandler = (req, res) => {
-  res.status(404);
+  res.sendStatus(404);
 };
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {

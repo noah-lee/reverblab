@@ -49,7 +49,7 @@ const User = db.define<UserAttributes>(
     hooks: {
       // Hash password before creating new user
       beforeCreate: async (user) => {
-        const salt = await bcrypt.genSalt(8);
+        const salt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(user.password, salt);
         user.password = hashedPassword;
       },

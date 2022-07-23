@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import 'dotenv/config';
 
-import userRouter from './routes/user.route';
+import userRouter from './routers/user.router';
 import errorMiddleware from './middlewares/error.middleware';
 
 const app = express();

@@ -1,12 +1,12 @@
-// Packages
 import { RequestHandler } from 'express';
 import { Op } from 'sequelize';
-import bcrypt from 'bcryptjs';
 import { body, validationResult } from 'express-validator';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import jwtConfig from '../config/jwt.config';
 
 import User from '../models/user.model';
+import jwtConfig from '../config/jwt.config';
+import { IPayload } from '../types';
 
 const verifyRegister: RequestHandler = async (req, res, next) => {
   try {
@@ -17,11 +17,21 @@ const verifyRegister: RequestHandler = async (req, res, next) => {
         .withMessage('Username must be at least 4 characters long.')
         .isAlpha()
         .withMessage('Username can only include letters.')
+        .custom(async (value) => {
+          const user = await User.findOne({ where: { username: value } });
+          if (user) throw new Error('Username is already in use.');
+          return true;
+        })
         .run(req),
       // Validate email
       body('email')
         .isEmail()
-        .withMessage('Email provided is invalid.')
+        .withMessage('Email is invalid.')
+        .custom(async (value) => {
+          const user = await User.findOne({ where: { email: value } });
+          if (user) throw new Error('Email is already in use.');
+          return true;
+        })
         .run(req),
       // Validate password
       body('password')
@@ -75,13 +85,12 @@ const verifyToken: RequestHandler = (req, res, next) => {
     if (!accessToken) return res.sendStatus(401);
     jwt.verify(accessToken, jwtConfig.secret, (err, decoded) => {
       if (err) throw err;
-      res.locals.decoded = decoded;
+      // Set res.locals
+      res.locals.id = (decoded as IPayload).id;
+      res.locals.username = (decoded as IPayload).username;
+      res.locals.email = (decoded as IPayload).email;
     });
-    // Set res.locals
-    const { id, username, email } = res.locals.decoded;
-    res.locals.id = id;
-    res.locals.username = username;
-    res.locals.email = email;
+    res.json(res.locals);
     next();
   } catch (error) {
     next(error);

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user.model';
 import jwtConfig from '../config/jwt.config';
+import { IPayload } from '../types';
 
 const register: RequestHandler = async (req, res, next) => {
   try {
@@ -30,13 +31,7 @@ const userController = {
   login,
 };
 
-interface JwtPayload {
-  id: number;
-  username: string;
-  email: string;
-}
-
-const createToken = (payload: JwtPayload) => {
+const createToken = (payload: IPayload) => {
   return jwt.sign(payload, jwtConfig.secret, {
     expiresIn: jwtConfig.expiresIn,
   });

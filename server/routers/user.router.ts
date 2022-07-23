@@ -3,16 +3,16 @@ import express from 'express';
 import userMiddleware from '../middlewares/user.middleware';
 import userController from '../controllers/user.controller';
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.post(
+userRouter.post(
   '/register',
   userMiddleware.verifyRegister,
   userController.register
 );
 
-router.post('/login', userMiddleware.verifyLogin, userController.login);
+userRouter.post('/login', userMiddleware.verifyLogin, userController.login);
 
-router.post('/test', userMiddleware.verifyToken)
+userRouter.post('/check', userMiddleware.verifyToken);
 
-export default router;
+export default userRouter;
