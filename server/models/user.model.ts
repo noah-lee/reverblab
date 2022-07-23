@@ -5,19 +5,21 @@ import {
   InferCreationAttributes,
   CreationOptional,
 } from 'sequelize';
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
 
 import db from '../db';
 
 interface UserAttributes
-  extends Model<InferAttributes<UserAttributes>, InferCreationAttributes<UserAttributes>> {
+  extends Model<
+    InferAttributes<UserAttributes>,
+    InferCreationAttributes<UserAttributes>
+  > {
   id: CreationOptional<number>;
   username: string;
   email: string;
   password: string;
 }
 
-// User model
 const User = db.define<UserAttributes>(
   'User',
   {
@@ -44,14 +46,15 @@ const User = db.define<UserAttributes>(
   {
     tableName: 'users',
     timestamps: false,
+    hooks: {
+      // Hash password before creating new user
+      beforeCreate: async (user) => {
+        const salt = await bcrypt.genSalt(8);
+        const hashedPassword = await bcrypt.hash(user.password, salt);
+        user.password = hashedPassword;
+      },
+    },
   }
 );
-
-// Hash password before creating new user
-User.beforeCreate(async (user, options)=> {
-  const salt = await bcrypt.genSalt(8);
-  const hashedPassword = await bcrypt.hash(user.password, salt);
-  user.password = hashedPassword;
-})
 
 export default User;

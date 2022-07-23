@@ -1,17 +1,23 @@
-// Packages
 import { RequestHandler, ErrorRequestHandler } from 'express';
+import { BaseError } from 'sequelize';
 
-// Path not found handler
 const notFound: RequestHandler = (req, res) => {
   res.status(404);
 };
 
-// Catch-all error handler
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
-  res.status(statusCode).json({
+  // Sequelize error
+  if (err instanceof BaseError) return sequelizeError(err, req, res, next);
+
+  // Catch-all error
+  res.status(err.status || 500).json({
     message: err.message,
   });
+};
+
+const sequelizeError: ErrorRequestHandler = (err, req, res, next) => {
+  // Update status code based on error
+  res.status(500).json({ message: err.errors[0].message });
 };
 
 const errorMiddleware = {

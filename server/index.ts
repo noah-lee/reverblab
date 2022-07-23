@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import 'dotenv/config';
 
 import errorMiddleware from './middlewares/error.middleware';
+import userRouter from './routes/user.route';
 
 const app = express();
 
@@ -14,9 +15,7 @@ app.use(morgan('tiny')); // Log HTTP
 app.use(express.json()); // Parse request body with JSON
 app.use(express.urlencoded({ extended: true })); // Parse request body with string/array
 
-app.get('/bread', (req, res) => {
-  res.json('🍞');
-});
+app.use('/api/user', userRouter);
 
 app.use(errorMiddleware.notFound);
 app.use(errorMiddleware.errorHandler);
